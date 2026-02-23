@@ -11,7 +11,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   pointer-events: auto;
   will-change: opacity, transform;
 }
@@ -21,7 +20,6 @@
 }
 
 .fade-section {
-  transition: opacity 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: opacity, transform;
 }
 
@@ -281,7 +279,6 @@
   position: relative;
   padding: 0;
   overflow: hidden;
-  transition: opacity 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: opacity, transform;
 }
 
@@ -534,106 +531,154 @@
   min-height: 100vh;
   background: #FFF8E7;
   position: relative;
-  padding: 0 5vw 120px 5vw;
+  padding: 100px 5vw;
   margin-top: -100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: opacity, transform;
 }
 
-.about-container {
+.about-wrapper {
   max-width: 900px;
   width: 100%;
-  background: #6B6B6B;
-  border-radius: 24px;
-  padding: 80px 60px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 70px;
+}
+
+.about-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  text-align: center;
+}
+
+.about-label {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  font-family: 'Arial', 'Helvetica', sans-serif;
+  margin: 0;
+  opacity: 0.7;
 }
 
 .about-heading {
-  font-size: 64px;
+  font-size: 56px;
   font-weight: 700;
-  color: white;
-  font-family: 'Caveat', 'Kalam', cursive;
-  margin: 0 0 40px 0;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  position: relative;
+  line-height: 1.2;
+  color: #1a1a1a;
+  font-family: 'Arial', 'Helvetica', sans-serif;
+  margin: 0;
+  letter-spacing: -0.5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.heading-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: slideUpWord 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes slideUpWord {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.about-subtitle {
+  font-size: 18px;
+  line-height: 1.8;
+  color: #1a1a1a;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-weight: 300;
+  margin: 0;
+  max-width: 650px;
+  letter-spacing: -0.2px;
+}
+
+.about-cta {
   display: flex;
   align-items: center;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-.handwritten-word {
-  display: inline-block;
-  position: relative;
-  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-  transform-origin: left center;
-}
-
-.handwritten-word.word-1 {
-  animation: handwrittenWrite1 10s infinite;
-}
-
-.handwritten-word.word-2 {
-  animation: handwrittenWrite2 10s infinite;
-}
-
-@keyframes handwrittenWrite1 {
-  0% {
-    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-  }
-  5% {
-    clip-path: polygon(0 0, 20% 0, 20% 100%, 0 100%);
-  }
-  10% {
-    clip-path: polygon(0 0, 40% 0, 40% 100%, 0 100%);
-  }
-  15% {
-    clip-path: polygon(0 0, 60% 0, 60% 100%, 0 100%);
-  }
-  20% {
-    clip-path: polygon(0 0, 80% 0, 80% 100%, 0 100%);
-  }
-  25% {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
-  30%, 100% {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
-}
-
-@keyframes handwrittenWrite2 {
-  0%, 30% {
-    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
-  }
-  35% {
-    clip-path: polygon(0 0, 25% 0, 25% 100%, 0 100%);
-  }
-  40% {
-    clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
-  }
-  45% {
-    clip-path: polygon(0 0, 75% 0, 75% 100%, 0 100%);
-  }
-  50% {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
-  55%, 100% {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  }
-}
-
-.about-content {
-  font-size: 22px;
-  line-height: 1.7;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 auto;
+  padding: 16px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
   color: white;
-  font-family: 'Caveat', 'Kalam', cursive;
-  font-weight: 400;
+  background: #1a1a1a;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Arial', 'Helvetica', sans-serif;
+}
+
+.about-cta:hover {
+  background: #333;
+  transform: translateX(4px);
+}
+
+.about-cta svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.about-cta:hover svg {
+  transform: translateX(3px);
+}
+
+.about-content-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 50px;
+}
+
+.about-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 40px;
+  background: rgba(26, 26, 26, 0.04);
+  border: 1px solid rgba(26, 26, 26, 0.08);
+  border-radius: 8px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #1a1a1a;
+  font-family: 'Arial', 'Helvetica', sans-serif;
   margin: 0;
+}
+
+.card-text {
+  font-size: 18px;
+  line-height: 1.7;
+  color: #1a1a1a;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-weight: 300;
+  margin: 0;
+  letter-spacing: -0.2px;
 }
 
 /* Responsive Design */
@@ -672,23 +717,56 @@
   }
 
   .about-section {
-    padding: 0 5vw 80px 5vw;
+    padding: 80px 5vw;
     margin-top: -50vh;
   }
 
-  .about-container {
-    padding: 50px 30px;
-    border-radius: 20px;
+  .about-wrapper {
+    gap: 50px;
+  }
+
+  .about-label {
+    font-size: 12px;
+    letter-spacing: 2px;
   }
 
   .about-heading {
-    font-size: 40px;
-    margin-bottom: 30px;
+    font-size: 36px;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
+    gap: 8px;
   }
 
-  .about-content {
-    font-size: 18px;
+  .about-subtitle {
+    font-size: 16px;
     line-height: 1.7;
+    letter-spacing: -0.1px;
+  }
+
+  .about-cta {
+    padding: 14px 32px;
+    font-size: 14px;
+    letter-spacing: 0.3px;
+  }
+
+  .about-content-wrapper {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .about-card {
+    padding: 30px;
+    gap: 15px;
+  }
+
+  .card-title {
+    font-size: 14px;
+    letter-spacing: 1.5px;
+  }
+
+  .card-text {
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: -0.15px;
   }
 }
-

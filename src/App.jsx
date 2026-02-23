@@ -124,8 +124,8 @@ function App() {
   }, [currentVideoIndex])
 
   // Smooth easing function for professional transitions
-  const easeInOutCubic = (t) => {
-    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+  const easeInOutQuad = (t) => {
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
   }
 
   // Section fade effects on scroll with smooth easing
@@ -137,104 +137,84 @@ function App() {
         window.requestAnimationFrame(() => {
           const scrollY = window.scrollY
           const windowHeight = window.innerHeight
-          
-          // Landing page fade effect with smooth easing
+
+          // Landing page fade effect - quick fade out
           if (landingPageRef.current) {
-            const landingTop = 0
             const landingHeight = windowHeight
-            const landingBottom = landingTop + landingHeight
-            
-            // Fade out landing page as we scroll down
-            if (scrollY < landingBottom) {
-              const fadeStart = landingBottom * 0.25 // Start fading at 25% of landing page
-              const fadeEnd = landingBottom * 0.75 // Fully faded at 75% of landing page
-              const fadeRange = fadeEnd - fadeStart
-              
-              if (scrollY < fadeStart) {
-                setLandingOpacity(1)
-                setHeaderOpacity(1)
-              } else if (scrollY > fadeEnd) {
-                setLandingOpacity(0)
-                setHeaderOpacity(0.3) // Keep header slightly visible
-              } else {
-                const rawProgress = (scrollY - fadeStart) / fadeRange
-                const easedProgress = easeInOutCubic(rawProgress)
-                setLandingOpacity(1 - easedProgress)
-                setHeaderOpacity(1 - easedProgress * 0.7) // Header fades slower
-              }
-            } else {
+            const fadeStart = landingHeight * 0.2
+            const fadeEnd = landingHeight * 0.8
+            const fadeRange = fadeEnd - fadeStart
+
+            if (scrollY <= fadeStart) {
+              setLandingOpacity(1)
+              setHeaderOpacity(1)
+            } else if (scrollY >= fadeEnd) {
               setLandingOpacity(0)
-              setHeaderOpacity(0.3)
+              setHeaderOpacity(0)
+            } else {
+              const progress = (scrollY - fadeStart) / fadeRange
+              const easedProgress = easeInOutQuad(progress)
+              setLandingOpacity(Math.max(0, 1 - easedProgress))
+              setHeaderOpacity(Math.max(0, 1 - easedProgress))
             }
           }
-          
-          // Gallery section fade effect with smooth easing
+
+          // Gallery section fade effect
           if (galleryContainerRef.current) {
             const galleryTop = galleryContainerRef.current.offsetTop
-            const galleryHeight = galleryContainerRef.current.offsetHeight
-            
-            // Fade in gallery as we approach it
-            const fadeInStart = galleryTop - windowHeight * 0.6
-            const fadeInEnd = galleryTop + windowHeight * 0.1
+            const fadeInStart = galleryTop - windowHeight * 0.8
+            const fadeInEnd = galleryTop - windowHeight * 0.2
             const fadeInRange = fadeInEnd - fadeInStart
-            
-            if (scrollY < fadeInStart) {
+
+            if (scrollY <= fadeInStart) {
               setGalleryOpacity(0)
-            } else if (scrollY > fadeInEnd) {
+            } else if (scrollY >= fadeInEnd) {
               setGalleryOpacity(1)
             } else {
-              const rawProgress = (scrollY - fadeInStart) / fadeInRange
-              const easedProgress = easeInOutCubic(rawProgress)
+              const progress = (scrollY - fadeInStart) / fadeInRange
+              const easedProgress = easeInOutQuad(progress)
               setGalleryOpacity(easedProgress)
             }
           }
-          
+
           // Horizontal scroll effect for gallery
           if (galleryContainerRef.current && galleryRef.current) {
             const galleryTop = galleryContainerRef.current.offsetTop
             const galleryHeight = galleryContainerRef.current.offsetHeight
-            
-            // Check if we're in the gallery section
+
             if (scrollY >= galleryTop - windowHeight && scrollY <= galleryTop + galleryHeight) {
-              // Calculate scroll progress (0 to 1)
-              const rawProgress = Math.max(0, Math.min(1, 
+              const rawProgress = Math.max(0, Math.min(1,
                 (scrollY - (galleryTop - windowHeight)) / (windowHeight + galleryHeight)
               ))
-              const easedProgress = easeInOutCubic(rawProgress)
-              
-              // Calculate horizontal scroll position
+              const easedProgress = easeInOutQuad(rawProgress)
               const maxScroll = galleryRef.current.scrollWidth - galleryRef.current.clientWidth
               const scrollPosition = easedProgress * maxScroll
-              
-              // Smoothly update scroll position
+
               galleryRef.current.scrollTo({
                 left: scrollPosition,
                 behavior: 'auto'
               })
             }
           }
-          
-          // About section fade effect with smooth easing
+
+          // About section fade effect
           if (aboutSectionRef.current) {
             const aboutTop = aboutSectionRef.current.offsetTop
-            const aboutHeight = aboutSectionRef.current.offsetHeight
-            
-            // Fade in about section as we approach it
-            const fadeInStart = aboutTop - windowHeight * 0.7
-            const fadeInEnd = aboutTop + aboutHeight * 0.15
+            const fadeInStart = aboutTop - windowHeight * 0.8
+            const fadeInEnd = aboutTop - windowHeight * 0.2
             const fadeInRange = fadeInEnd - fadeInStart
-            
-            if (scrollY < fadeInStart) {
+
+            if (scrollY <= fadeInStart) {
               setAboutOpacity(0)
-            } else if (scrollY > fadeInEnd) {
+            } else if (scrollY >= fadeInEnd) {
               setAboutOpacity(1)
             } else {
-              const rawProgress = (scrollY - fadeInStart) / fadeInRange
-              const easedProgress = easeInOutCubic(rawProgress)
+              const progress = (scrollY - fadeInStart) / fadeInRange
+              const easedProgress = easeInOutQuad(progress)
               setAboutOpacity(easedProgress)
             }
           }
-          
+
           ticking = false
         })
         ticking = true
@@ -243,24 +223,28 @@ function App() {
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     handleScroll() // Initial call
-    
+
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
     <>
-    <div 
+    <div
       className="landing-page fade-section"
       ref={landingPageRef}
-      style={{ 
+      style={{
         opacity: landingOpacity,
-        transform: `translateY(${(1 - landingOpacity) * 20}px)`
+        transform: `translateY(${(1 - landingOpacity) * 20}px)`,
+        transition: 'opacity 0.1s linear, transform 0.1s linear'
       }}
     >
       {/* Header */}
-      <header 
+      <header
         className="landing-header fade-section"
-        style={{ opacity: headerOpacity }}
+        style={{
+          opacity: headerOpacity,
+          transition: 'opacity 0.1s linear'
+        }}
       >
         {/* Left: Brand name with typewriter effect */}
         <div className="brand-name">
@@ -327,9 +311,12 @@ function App() {
       </video>
 
       {/* Video Navigation Bar */}
-      <div 
+      <div
         className="video-navigation fade-section"
-        style={{ opacity: landingOpacity }}
+        style={{
+          opacity: landingOpacity,
+          transition: 'opacity 0.1s linear'
+        }}
       >
         {videos.map((video, index) => (
           <button
@@ -344,9 +331,12 @@ function App() {
       </div>
 
       {/* Audio Toggle Button */}
-      <button 
+      <button
         className="audio-toggle fade-section"
-        style={{ opacity: landingOpacity }}
+        style={{
+          opacity: landingOpacity,
+          transition: 'opacity 0.1s linear'
+        }}
         onClick={() => {
           setIsMuted(!isMuted)
           if (videoRef.current) {
@@ -368,12 +358,13 @@ function App() {
     </div>
 
     {/* Horizontal Scrolling Gallery Section */}
-    <section 
-      className="gallery-section fade-section" 
+    <section
+      className="gallery-section fade-section"
       ref={galleryContainerRef}
-      style={{ 
+      style={{
         opacity: galleryOpacity,
-        transform: `translateY(${(1 - galleryOpacity) * 30}px)`
+        transform: `translateY(${(1 - galleryOpacity) * 30}px)`,
+        transition: 'opacity 0.1s linear, transform 0.1s linear'
       }}
     >
       <div className="gallery-container" ref={galleryRef}>
@@ -430,22 +421,52 @@ function App() {
     </section>
 
     {/* About Section */}
-    <section 
+    <section
       className="about-section fade-section"
       ref={aboutSectionRef}
-      style={{ 
+      style={{
         opacity: aboutOpacity,
-        transform: `translateY(${(1 - aboutOpacity) * 30}px)`
+        transform: `translateY(${(1 - aboutOpacity) * 30}px)`,
+        transition: 'opacity 0.1s linear, transform 0.1s linear'
       }}
     >
-      <div className="about-container">
-        <h2 className="about-heading">
-          <span className="handwritten-word word-1">ABOUT</span>
-          <span className="handwritten-word word-2">US</span>
-        </h2>
-        <p className="about-content">
-          Western Vintage Organization is a youth-driven creative platform in the Western Region of Ghana, focused on empowering young people through fashion, art, and street culture. We provide a space where creativity is celebrated, talents are showcased, and young people are inspired to express themselves confidently. Through events like the Western Vintage Gala, we aim to build a positive culture that supports youth creativity and shapes a brighter future.
-        </p>
+      <div className="about-wrapper">
+        <div className="about-header">
+          <p className="about-label">ABOUT</p>
+          <h2 className="about-heading">
+            {["A", "Platform", "For", "Youth", "Creativity,", "How", "Our", "Passion", "Powers", "Everything"].map((word, index) => (
+              <span key={index} className="heading-word" style={{ animationDelay: `${index * 0.08}s` }}>
+                {word}
+              </span>
+            ))}
+          </h2>
+          <p className="about-subtitle">
+            Western Vintage Organization is a youth-driven creative platform in the Western Region of Ghana, dedicated to empowering young people through fashion, art, and street culture.
+          </p>
+        </div>
+
+        <button className="about-cta">
+          <span>Join Our Community</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
+
+        <div className="about-content-wrapper">
+          <div className="about-card">
+            <h3 className="card-title">OUR MISSION</h3>
+            <p className="card-text">
+              We provide a space where creativity is celebrated, talents are showcased, and young people are inspired to express themselves confidently through authentic self-expression and community engagement.
+            </p>
+          </div>
+
+          <div className="about-card">
+            <h3 className="card-title">OUR VISION</h3>
+            <p className="card-text">
+              Through events like the Western Vintage Gala, we build a positive culture that supports youth creativity and shapes a brighter future for the next generation of innovators.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
     </>
@@ -453,5 +474,3 @@ function App() {
 }
 
 export default App
-
-
