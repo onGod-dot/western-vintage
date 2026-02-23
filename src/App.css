@@ -531,7 +531,7 @@
   min-height: 100vh;
   background: #FFF8E7;
   position: relative;
-  padding: 120px 5vw;
+  padding: 100px 5vw;
   margin-top: -100vh;
   display: flex;
   align-items: center;
@@ -540,112 +540,123 @@
 }
 
 .about-wrapper {
-  max-width: 950px;
+  max-width: 900px;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 60px;
+  gap: 70px;
 }
 
 .about-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 30px;
-  flex-wrap: wrap;
-  position: relative;
+  text-align: center;
 }
 
-.decorative-line {
-  flex: 1;
-  min-width: 40px;
-  height: 2px;
-  background: linear-gradient(to right, transparent, #1a1a1a, transparent);
-}
-
-.about-title {
-  font-size: 56px;
+.about-label {
+  font-size: 14px;
   font-weight: 700;
-  letter-spacing: 4px;
+  letter-spacing: 3px;
   text-transform: uppercase;
   color: #1a1a1a;
   font-family: 'Arial', 'Helvetica', sans-serif;
   margin: 0;
-  white-space: nowrap;
+  opacity: 0.7;
 }
 
-.about-content-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 50px;
+.about-heading {
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #1a1a1a;
+  font-family: 'Arial', 'Helvetica', sans-serif;
+  margin: 0;
+  letter-spacing: -0.5px;
 }
 
-.about-description {
-  font-size: 32px;
-  line-height: 1.6;
+.about-subtitle {
+  font-size: 18px;
+  line-height: 1.8;
   color: #1a1a1a;
   font-family: 'Georgia', 'Times New Roman', serif;
   font-weight: 300;
   margin: 0;
-  text-align: center;
-  max-width: 850px;
-  margin-left: auto;
-  margin-right: auto;
-  letter-spacing: -0.3px;
+  max-width: 650px;
+  letter-spacing: -0.2px;
 }
 
-.about-mission,
-.about-vision {
-  background: transparent;
-  padding: 40px 50px;
-  border-left: 3px solid #1a1a1a;
-}
-
-.mission-title,
-.vision-title {
+.about-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 0 auto;
+  padding: 16px 40px;
   font-size: 16px;
   font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: white;
+  background: #1a1a1a;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Arial', 'Helvetica', sans-serif;
+}
+
+.about-cta:hover {
+  background: #333;
+  transform: translateX(4px);
+}
+
+.about-cta svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.about-cta:hover svg {
+  transform: translateX(3px);
+}
+
+.about-content-wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 50px;
+}
+
+.about-card {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 40px;
+  background: rgba(26, 26, 26, 0.04);
+  border: 1px solid rgba(26, 26, 26, 0.08);
+  border-radius: 8px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: #1a1a1a;
   font-family: 'Arial', 'Helvetica', sans-serif;
-  margin: 0 0 20px 0;
-  opacity: 0.8;
+  margin: 0;
 }
 
-.mission-text,
-.vision-text {
-  font-size: 24px;
+.card-text {
+  font-size: 18px;
   line-height: 1.7;
   color: #1a1a1a;
   font-family: 'Georgia', 'Times New Roman', serif;
   font-weight: 300;
   margin: 0;
   letter-spacing: -0.2px;
-}
-
-.about-footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-.footer-divider {
-  width: 80px;
-  height: 2px;
-  background: #1a1a1a;
-}
-
-.about-tagline {
-  font-size: 20px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #1a1a1a;
-  font-family: 'Arial', 'Helvetica', sans-serif;
-  font-weight: 600;
-  margin: 0;
-  text-align: center;
 }
 
 /* Responsive Design */
@@ -689,48 +700,50 @@
   }
 
   .about-wrapper {
-    gap: 40px;
+    gap: 50px;
   }
 
-  .about-header {
-    gap: 15px;
-  }
-
-  .decorative-line {
-    min-width: 20px;
-  }
-
-  .about-title {
-    font-size: 36px;
+  .about-label {
+    font-size: 12px;
     letter-spacing: 2px;
   }
 
-  .about-description {
-    font-size: 22px;
-    line-height: 1.6;
-    letter-spacing: -0.2px;
+  .about-heading {
+    font-size: 36px;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
   }
 
-  .about-mission,
-  .about-vision {
-    padding: 30px 35px;
+  .about-subtitle {
+    font-size: 16px;
+    line-height: 1.7;
+    letter-spacing: -0.1px;
   }
 
-  .mission-title,
-  .vision-title {
+  .about-cta {
+    padding: 14px 32px;
     font-size: 14px;
-    margin-bottom: 15px;
+    letter-spacing: 0.3px;
   }
 
-  .mission-text,
-  .vision-text {
-    font-size: 18px;
+  .about-content-wrapper {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .about-card {
+    padding: 30px;
+    gap: 15px;
+  }
+
+  .card-title {
+    font-size: 14px;
+    letter-spacing: 1.5px;
+  }
+
+  .card-text {
+    font-size: 16px;
     line-height: 1.6;
     letter-spacing: -0.15px;
-  }
-
-  .about-tagline {
-    font-size: 16px;
-    letter-spacing: 1px;
   }
 }

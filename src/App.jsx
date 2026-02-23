@@ -432,34 +432,34 @@ function App() {
     >
       <div className="about-wrapper">
         <div className="about-header">
-          <div className="decorative-line"></div>
-          <h2 className="about-title">ABOUT US</h2>
-          <div className="decorative-line"></div>
+          <p className="about-label">ABOUT</p>
+          <h2 className="about-heading">A Platform For Youth Creativity, How Our Passion Powers Everything</h2>
+          <p className="about-subtitle">
+            Western Vintage Organization is a youth-driven creative platform in the Western Region of Ghana, dedicated to empowering young people through fashion, art, and street culture.
+          </p>
         </div>
+
+        <button className="about-cta">
+          <span>Join Our Community</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </button>
 
         <div className="about-content-wrapper">
-          <p className="about-description">
-            Western Vintage Organization is a youth-driven creative platform in the Western Region of Ghana, focused on empowering young people through fashion, art, and street culture.
-          </p>
-
-          <div className="about-mission">
-            <h3 className="mission-title">OUR MISSION</h3>
-            <p className="mission-text">
-              We provide a space where creativity is celebrated, talents are showcased, and young people are inspired to express themselves confidently through authentic self-expression.
+          <div className="about-card">
+            <h3 className="card-title">OUR MISSION</h3>
+            <p className="card-text">
+              We provide a space where creativity is celebrated, talents are showcased, and young people are inspired to express themselves confidently through authentic self-expression and community engagement.
             </p>
           </div>
 
-          <div className="about-vision">
-            <h3 className="vision-title">OUR VISION</h3>
-            <p className="vision-text">
-              Through events like the Western Vintage Gala, we aim to build a positive culture that supports youth creativity and shapes a brighter future for the next generation.
+          <div className="about-card">
+            <h3 className="card-title">OUR VISION</h3>
+            <p className="card-text">
+              Through events like the Western Vintage Gala, we build a positive culture that supports youth creativity and shapes a brighter future for the next generation of innovators.
             </p>
           </div>
-        </div>
-
-        <div className="about-footer">
-          <div className="footer-divider"></div>
-          <p className="about-tagline">Creativity. Expression. Community.</p>
         </div>
       </div>
     </section>
