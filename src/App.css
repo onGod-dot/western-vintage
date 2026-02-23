@@ -11,7 +11,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   pointer-events: auto;
   will-change: opacity, transform;
 }
@@ -21,7 +20,6 @@
 }
 
 .fade-section {
-  transition: opacity 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: opacity, transform;
 }
 
@@ -281,7 +279,6 @@
   position: relative;
   padding: 0;
   overflow: hidden;
-  transition: opacity 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: opacity, transform;
 }
 
@@ -539,7 +536,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: opacity 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: opacity, transform;
 }
 
@@ -691,4 +687,3 @@
     line-height: 1.7;
   }
 }
-
