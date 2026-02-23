@@ -430,14 +430,37 @@ function App() {
         transition: 'opacity 0.1s linear, transform 0.1s linear'
       }}
     >
-      <div className="about-container">
-        <h2 className="about-heading">
-          <span className="handwritten-word word-1">ABOUT</span>
-          <span className="handwritten-word word-2">US</span>
-        </h2>
-        <p className="about-content">
-          Western Vintage Organization is a youth-driven creative platform in the Western Region of Ghana, focused on empowering young people through fashion, art, and street culture. We provide a space where creativity is celebrated, talents are showcased, and young people are inspired to express themselves confidently. Through events like the Western Vintage Gala, we aim to build a positive culture that supports youth creativity and shapes a brighter future.
-        </p>
+      <div className="about-wrapper">
+        <div className="about-header">
+          <div className="decorative-line"></div>
+          <h2 className="about-title">ABOUT US</h2>
+          <div className="decorative-line"></div>
+        </div>
+
+        <div className="about-content-wrapper">
+          <p className="about-description">
+            Western Vintage Organization is a youth-driven creative platform in the Western Region of Ghana, focused on empowering young people through fashion, art, and street culture.
+          </p>
+
+          <div className="about-mission">
+            <h3 className="mission-title">OUR MISSION</h3>
+            <p className="mission-text">
+              We provide a space where creativity is celebrated, talents are showcased, and young people are inspired to express themselves confidently through authentic self-expression.
+            </p>
+          </div>
+
+          <div className="about-vision">
+            <h3 className="vision-title">OUR VISION</h3>
+            <p className="vision-text">
+              Through events like the Western Vintage Gala, we aim to build a positive culture that supports youth creativity and shapes a brighter future for the next generation.
+            </p>
+          </div>
+        </div>
+
+        <div className="about-footer">
+          <div className="footer-divider"></div>
+          <p className="about-tagline">Creativity. Expression. Community.</p>
+        </div>
       </div>
     </section>
     </>
