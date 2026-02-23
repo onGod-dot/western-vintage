@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Western Vintage Organization
 
 A modern website for Western Vintage Organization and the Western Vintage Gala 2025.
@@ -28,3 +29,6 @@ npm run build
 npm run preview
 ```
 
+=======
+# western-vintage
+>>>>>>> c5071eb67f0bb59b4344e9385d5975ea283ef2d9
