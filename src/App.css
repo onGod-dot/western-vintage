@@ -575,6 +575,28 @@
   font-family: 'Arial', 'Helvetica', sans-serif;
   margin: 0;
   letter-spacing: -0.5px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.heading-word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: slideUpWord 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes slideUpWord {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .about-subtitle {
@@ -712,6 +734,7 @@
     font-size: 36px;
     line-height: 1.2;
     letter-spacing: -0.3px;
+    gap: 8px;
   }
 
   .about-subtitle {

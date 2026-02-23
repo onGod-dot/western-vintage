@@ -433,7 +433,13 @@ function App() {
       <div className="about-wrapper">
         <div className="about-header">
           <p className="about-label">ABOUT</p>
-          <h2 className="about-heading">A Platform For Youth Creativity, How Our Passion Powers Everything</h2>
+          <h2 className="about-heading">
+            {["A", "Platform", "For", "Youth", "Creativity,", "How", "Our", "Passion", "Powers", "Everything"].map((word, index) => (
+              <span key={index} className="heading-word" style={{ animationDelay: `${index * 0.08}s` }}>
+                {word}
+              </span>
+            ))}
+          </h2>
           <p className="about-subtitle">
             Western Vintage Organization is a youth-driven creative platform in the Western Region of Ghana, dedicated to empowering young people through fashion, art, and street culture.
           </p>
