@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import './App.css'
 
 // Typewriter effect component
@@ -21,8 +22,13 @@ function Typewriter({ text, speed = 100 }) {
 
 function App() {
   const videoRef = useRef(null)
-  const galleryRef = useRef(null)
   const galleryContainerRef = useRef(null)
+  const galleryViewportRef = useRef(null)
+  const galleryContentRef = useRef(null)
+  const galleryMaxScrollRef = useRef(0)
+  const galleryLockedRef = useRef(false)
+  const galleryProgressRef = useRef(0)
+  const galleryCompletedRef = useRef(false)
   const landingPageRef = useRef(null)
   const aboutSectionRef = useRef(null)
   const [error, setError] = useState(null)
@@ -33,7 +39,16 @@ function App() {
   const [aboutOpacity, setAboutOpacity] = useState(0)
   const [headerOpacity, setHeaderOpacity] = useState(1)
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0)
-  
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuOpen && !e.target.closest('.header-menu')) setMenuOpen(false)
+    }
+    document.addEventListener('click', handleClickOutside)
+    return () => document.removeEventListener('click', handleClickOutside)
+  }, [menuOpen])
+
   const videos = [
     { src: '/mov/landing.mov', type: 'video/quicktime', name: 'Landing' },
     { src: '/mov/WhatsApp Video 2025-11-21 at 07.30.40.mp4', type: 'video/mp4', name: 'Video 1' },
@@ -128,7 +143,28 @@ function App() {
     return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t
   }
 
-  // Section fade effects on scroll with smooth easing
+  // Measure gallery content width for transform-based scroll (avoids layout thrashing)
+  useEffect(() => {
+    const measure = () => {
+      if (galleryViewportRef.current && galleryContentRef.current) {
+        const contentWidth = galleryContentRef.current.offsetWidth
+        const viewportWidth = galleryViewportRef.current.clientWidth
+        const endBuffer = Math.min(80, viewportWidth * 0.05) // so last item (quote) is fully in view
+        galleryMaxScrollRef.current = Math.max(
+          0,
+          contentWidth - viewportWidth + endBuffer
+        )
+      }
+    }
+    const raf = requestAnimationFrame(measure)
+    const ro = new ResizeObserver(measure)
+    if (galleryViewportRef.current) ro.observe(galleryViewportRef.current)
+    if (galleryContentRef.current) ro.observe(galleryContentRef.current)
+    return () => {
+      cancelAnimationFrame(raf)
+      ro.disconnect()
+    }
+  }, [])
   useEffect(() => {
     let ticking = false
 
@@ -177,24 +213,46 @@ function App() {
             }
           }
 
-          // Horizontal scroll effect for gallery
-          if (galleryContainerRef.current && galleryRef.current) {
+          // Horizontal scroll: when locked, scroll is fixed and wheel drives progress; when not locked, scroll drives progress
+          if (galleryContainerRef.current && galleryContentRef.current) {
             const galleryTop = galleryContainerRef.current.offsetTop
             const galleryHeight = galleryContainerRef.current.offsetHeight
+            const maxScroll = galleryMaxScrollRef.current
 
-            if (scrollY >= galleryTop - windowHeight && scrollY <= galleryTop + galleryHeight) {
-              const rawProgress = Math.max(0, Math.min(1,
-                (scrollY - (galleryTop - windowHeight)) / (windowHeight + galleryHeight)
-              ))
-              const easedProgress = easeInOutQuad(rawProgress)
-              const maxScroll = galleryRef.current.scrollWidth - galleryRef.current.clientWidth
-              const scrollPosition = easedProgress * maxScroll
+            if (scrollY < galleryTop) galleryCompletedRef.current = false
 
-              galleryRef.current.scrollTo({
-                left: scrollPosition,
-                behavior: 'auto'
-              })
+            if (scrollY >= galleryTop + galleryHeight) {
+              galleryLockedRef.current = false
             }
+
+            if (galleryLockedRef.current && scrollY >= galleryTop && scrollY < galleryTop + galleryHeight) {
+              window.scrollTo(0, galleryTop)
+              const progress = galleryProgressRef.current
+              galleryContentRef.current.style.transform = `translate3d(${-progress * maxScroll}px, 0, 0)`
+              ticking = false
+              return
+            }
+
+            if (scrollY >= galleryTop && scrollY < galleryTop + galleryHeight && !galleryCompletedRef.current) {
+              galleryLockedRef.current = true
+              galleryProgressRef.current = 0
+              window.scrollTo(0, galleryTop)
+              galleryContentRef.current.style.transform = `translate3d(0, 0, 0)`
+              ticking = false
+              return
+            }
+
+            const scrollRange = galleryHeight * 0.75
+            let progress
+            if (scrollY <= galleryTop) {
+              progress = 0
+            } else if (scrollY >= galleryTop + scrollRange) {
+              progress = 1
+            } else {
+              progress = (scrollY - galleryTop) / scrollRange
+            }
+            galleryProgressRef.current = progress
+            galleryContentRef.current.style.transform = `translate3d(${-progress * maxScroll}px, 0, 0)`
           }
 
           // About section fade effect
@@ -225,6 +283,51 @@ function App() {
     handleScroll() // Initial call
 
     return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  // Gallery: lock vertical scroll and drive horizontal with wheel until quote is viewed
+  useEffect(() => {
+    const sensitivity = 0.002
+
+    const handleWheel = (e) => {
+      if (!galleryContainerRef.current || !galleryContentRef.current) return
+      const galleryTop = galleryContainerRef.current.offsetTop
+      const galleryHeight = galleryContainerRef.current.offsetHeight
+      const scrollY = window.scrollY
+      if (scrollY < galleryTop || scrollY > galleryTop + galleryHeight) return
+
+      const delta = e.deltaY
+
+      if (galleryLockedRef.current) {
+        const maxScroll = galleryMaxScrollRef.current
+        if (delta > 0 && galleryProgressRef.current < 1) {
+          e.preventDefault()
+          galleryProgressRef.current = Math.min(1, galleryProgressRef.current + delta * sensitivity)
+          galleryContentRef.current.style.transform = `translate3d(${-galleryProgressRef.current * maxScroll}px, 0, 0)`
+          window.scrollTo(0, galleryTop)
+          if (galleryProgressRef.current >= 1) {
+            galleryLockedRef.current = false
+            galleryCompletedRef.current = true
+          }
+        } else if (delta < 0 && galleryProgressRef.current > 0) {
+          e.preventDefault()
+          galleryProgressRef.current = Math.max(0, galleryProgressRef.current + delta * sensitivity)
+          galleryContentRef.current.style.transform = `translate3d(${-galleryProgressRef.current * maxScroll}px, 0, 0)`
+          window.scrollTo(0, galleryTop)
+          if (galleryProgressRef.current <= 0) galleryLockedRef.current = false
+        }
+        return
+      }
+
+      if (!galleryLockedRef.current && galleryCompletedRef.current && delta > 0 && aboutSectionRef.current) {
+        e.preventDefault()
+        const aboutTop = aboutSectionRef.current.offsetTop
+        window.scrollTo({ top: aboutTop, behavior: 'smooth' })
+      }
+    }
+
+    window.addEventListener('wheel', handleWheel, { passive: false })
+    return () => window.removeEventListener('wheel', handleWheel)
   }, [])
 
   return (
@@ -279,12 +382,20 @@ function App() {
             </a>
           </div>
 
-          {/* Hamburger Menu Icon */}
-          <button className="hamburger-menu" aria-label="Menu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
+          {/* Hamburger Menu */}
+          <div className="hamburger-wrap">
+            <button type="button" className="hamburger-menu" aria-label="Menu" onClick={() => setMenuOpen(!menuOpen)}>
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            {menuOpen && (
+              <div className="header-dropdown">
+                <Link to="/" onClick={() => setMenuOpen(false)}>Home</Link>
+                <Link to="/events" onClick={() => setMenuOpen(false)}>Events</Link>
+              </div>
+            )}
+          </div>
         </nav>
       </header>
 
@@ -359,6 +470,7 @@ function App() {
 
     {/* Horizontal Scrolling Gallery Section */}
     <section
+      id="gallery"
       className="gallery-section fade-section"
       ref={galleryContainerRef}
       style={{
@@ -367,8 +479,8 @@ function App() {
         transition: 'opacity 0.1s linear, transform 0.1s linear'
       }}
     >
-      <div className="gallery-container" ref={galleryRef}>
-        <div className="gallery-content">
+      <div className="gallery-container" ref={galleryViewportRef}>
+        <div className="gallery-content" ref={galleryContentRef}>
           {/* Image 1 - Medium Portrait */}
           <div className="gallery-item image-item image-portrait">
             <div className="image-label-top">VINTAGE FORMAL</div>
@@ -422,6 +534,7 @@ function App() {
 
     {/* About Section */}
     <section
+      id="about"
       className="about-section fade-section"
       ref={aboutSectionRef}
       style={{
@@ -433,9 +546,9 @@ function App() {
       <div className="about-wrapper">
         <div className="about-header">
           <p className="about-label">ABOUT</p>
-          <h2 className="about-heading">
+          <h2 className={`about-heading ${aboutOpacity > 0.2 ? 'about-heading--visible' : ''}`}>
             {["A", "Platform", "For", "Youth", "Creativity,", "How", "Our", "Passion", "Powers", "Everything"].map((word, index) => (
-              <span key={index} className="heading-word" style={{ animationDelay: `${index * 0.08}s` }}>
+              <span key={index} className="heading-word" style={{ animationDelay: `${index * 0.05}s` }}>
                 {word}
               </span>
             ))}
@@ -451,24 +564,51 @@ function App() {
             <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </button>
+      </div>
+    </section>
 
-        <div className="about-content-wrapper">
-          <div className="about-card">
-            <h3 className="card-title">OUR MISSION</h3>
-            <p className="card-text">
-              We provide a space where creativity is celebrated, talents are showcased, and young people are inspired to express themselves confidently through authentic self-expression and community engagement.
-            </p>
-          </div>
-
-          <div className="about-card">
-            <h3 className="card-title">OUR VISION</h3>
-            <p className="card-text">
-              Through events like the Western Vintage Gala, we build a positive culture that supports youth creativity and shapes a brighter future for the next generation of innovators.
-            </p>
-          </div>
+    {/* Sponsor CTA Section */}
+    <section className="cta-section">
+      <div className="cta-inner">
+        <div className="cta-card">
+          <h2 className="cta-headline">Join the family now<br />Become a Sponsor Today. Let's Build Dreams</h2>
+          <button type="button" className="cta-button">Join us</button>
         </div>
       </div>
     </section>
+
+    {/* Footer */}
+    <footer className="site-footer">
+      <div className="footer-inner">
+        <div className="footer-col footer-brand">
+          <span className="footer-logo">Western Vintage</span>
+          <span className="footer-logo-dot"></span>
+        </div>
+        <div className="footer-col">
+          <h4 className="footer-heading">Socials</h4>
+          <ul className="footer-links">
+            <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+            <li><a href="https://www.tiktok.com/@the_western.vintage" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+          </ul>
+        </div>
+        <div className="footer-col">
+          <h4 className="footer-heading">Discover</h4>
+          <ul className="footer-links">
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#gallery">Gallery</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        <div className="footer-col">
+          <h4 className="footer-heading">Featured</h4>
+          <ul className="footer-links">
+            <li><a href="#events">Western Vintage Gala</a></li>
+            <li><a href="#about">Our Mission</a></li>
+            <li><a href="#community">Join Community</a></li>
+          </ul>
+        </div>
+      </div>
+    </footer>
     </>
   )
 }
