@@ -177,130 +177,92 @@
 .events-videos-inner {
   position: relative;
   z-index: 1;
-  max-width: 1000px;
+  max-width: 720px;
   margin: 0 auto;
 }
 
-.events-section-title {
-  font-family: 'Arial', 'Helvetica', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #1a1a1a;
-  margin: 0 0 8px 0;
+/* Asymmetric grid – sizes tuned to TikTok embed dimensions */
+.events-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  grid-template-rows: auto auto;
+  gap: 12px;
+  width: 100%;
 }
 
-.events-section-desc {
+.events-grid-cell {
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(26, 26, 26, 0.06);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.events-grid-embed {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.events-grid-embed iframe {
+  border: none;
+  display: block;
+}
+
+/* Wide cells: ~360×225 to suit embed */
+.events-grid-cell--wide .events-grid-embed {
+  min-height: 200px;
+}
+
+.events-grid-cell--wide .events-grid-embed iframe {
+  width: 100%;
+  max-width: 360px;
+  height: 225px;
+  min-height: 200px;
+}
+
+/* Tall cell: portrait embed ~280×500 */
+.events-grid-cell--tall .events-grid-embed {
+  min-height: 420px;
+}
+
+.events-grid-cell--tall .events-grid-embed iframe {
+  width: 280px;
+  max-width: 100%;
+  height: 500px;
+  min-height: 420px;
+}
+
+/* Square cell: ~260×260 */
+.events-grid-cell--square .events-grid-embed {
+  min-height: 240px;
+}
+
+.events-grid-cell--square .events-grid-embed iframe {
+  width: 260px;
+  max-width: 100%;
+  height: 260px;
+  min-height: 240px;
+}
+
+.events-grid-credit {
   font-family: 'Georgia', 'Times New Roman', serif;
-  font-size: 16px;
+  font-size: 14px;
   color: #1a1a1a;
-  opacity: 0.8;
-  margin: 0 0 32px 0;
+  opacity: 0.75;
+  margin: 20px 0 0 0;
+  text-align: center;
 }
 
-.events-section-desc a {
+.events-grid-credit a {
   color: #1a1a1a;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 
-.events-section-desc a:hover {
+.events-grid-credit a:hover {
   opacity: 0.9;
-}
-
-/* Carousel */
-.events-carousel {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px 0;
-}
-
-.events-carousel-btn {
-  flex-shrink: 0;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 2px solid #1a1a1a;
-  background: #FFF8E7;
-  color: #1a1a1a;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s, color 0.2s, transform 0.2s;
-}
-
-.events-carousel-btn:hover {
-  background: #1a1a1a;
-  color: #FFF8E7;
-  transform: scale(1.05);
-}
-
-.events-carousel-viewport {
-  flex: 1;
-  max-width: 360px;
-  overflow: hidden;
-}
-
-.events-carousel-track {
-  display: flex;
-  transition: transform 0.4s ease;
-}
-
-.events-carousel-slide {
-  flex: 0 0 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.events-tiktok-embed {
-  width: 100%;
-  max-width: 325px;
-  margin: 0 auto;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
-}
-
-.events-tiktok-embed iframe {
-  display: block;
-  width: 100%;
-  max-width: 325px;
-  height: 575px;
-  border: none;
-}
-
-.events-carousel-dots {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.events-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: 2px solid #1a1a1a;
-  background: transparent;
-  cursor: pointer;
-  padding: 0;
-  transition: background 0.2s, transform 0.2s;
-}
-
-.events-dot:hover,
-.events-dot.active {
-  background: #1a1a1a;
-}
-
-.events-dot.active {
-  transform: scale(1.2);
 }
 
 /* Footer */
@@ -391,20 +353,27 @@
     font-size: 18px;
   }
 
-  .events-carousel {
-    flex-direction: column;
-    gap: 16px;
+  .events-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
 
-  .events-carousel-btn {
-    order: 2;
+  .events-grid-cell--wide .events-grid-embed iframe {
+    width: 100%;
+    max-width: 320px;
+    height: 200px;
   }
 
-  .events-carousel-prev { order: 1; }
-  .events-carousel-next { order: 3; }
+  .events-grid-cell--tall .events-grid-embed iframe {
+    width: 100%;
+    max-width: 280px;
+    height: 440px;
+  }
 
-  .events-tiktok-embed iframe {
-    height: 500px;
+  .events-grid-cell--square .events-grid-embed iframe {
+    width: 100%;
+    max-width: 260px;
+    height: 260px;
   }
 
   .events-footer-inner {

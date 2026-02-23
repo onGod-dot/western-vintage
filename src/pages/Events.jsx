@@ -2,32 +2,24 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import '../Events.css'
 
-// Replace with real video IDs from your TikTok URLs: tiktok.com/@the_western.vintage/video/VIDEO_ID
-const TIKTOK_VIDEO_IDS = [
-  '7321234567890123456',
-  '7321234567890123457',
-  '7321234567890123458'
-]
+// From https://www.tiktok.com/@the_western.vintage (photo/video IDs from URLs)
+const TIKTOK_ITEMS = [
+  "7579343117866831116",
+  "7577328933914332472",
+  "7576970091670129932",
+  "7576540896355781944",
+];
 
 function Events() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const [carouselIndex, setCarouselIndex] = useState(0)
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (menuOpen && !e.target.closest('.header-menu')) setMenuOpen(false)
+      if (menuOpen && !e.target.closest('.events-nav')) setMenuOpen(false)
     }
     document.addEventListener('click', handleClickOutside)
     return () => document.removeEventListener('click', handleClickOutside)
   }, [menuOpen])
-
-  const nextSlide = () => {
-    setCarouselIndex((i) => (i + 1) % TIKTOK_VIDEO_IDS.length)
-  }
-
-  const prevSlide = () => {
-    setCarouselIndex((i) => (i - 1 + TIKTOK_VIDEO_IDS.length) % TIKTOK_VIDEO_IDS.length)
-  }
 
   return (
     <div className="events-page">
@@ -67,49 +59,23 @@ function Events() {
 
         <section className="events-videos-section">
           <div className="events-videos-inner">
-            <div className="events-carousel">
-              <button type="button" className="events-carousel-btn events-carousel-prev" aria-label="Previous" onClick={prevSlide}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
-              </button>
-
-              <div className="events-carousel-viewport">
-                <div
-                  className="events-carousel-track"
-                  style={{ transform: `translateX(-${carouselIndex * 100}%)` }}
-                >
-                  {TIKTOK_VIDEO_IDS.map((id, i) => (
-                    <div key={id} className="events-carousel-slide">
-                      <div className="events-tiktok-embed">
-                        <iframe
-                          src={`https://www.tiktok.com/embed/v2/${id}`}
-                          width="325"
-                          height="575"
-                          frameBorder="0"
-                          allowFullScreen
-                          title={`TikTok video ${i + 1}`}
-                        />
-                      </div>
-                    </div>
-                  ))}
+            <div className="events-grid">
+              {TIKTOK_ITEMS.map((id, i) => (
+                <div key={id} className="events-grid-cell">
+                  <div className="events-grid-embed">
+                    <iframe
+                      src={`https://www.tiktok.com/embed/v2/${id}`}
+                      frameBorder="0"
+                      allowFullScreen
+                      title={`TikTok from @the_western.vintage ${i + 1}`}
+                    />
+                  </div>
                 </div>
-              </div>
-
-              <button type="button" className="events-carousel-btn events-carousel-next" aria-label="Next" onClick={nextSlide}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
-              </button>
-            </div>
-
-            <div className="events-carousel-dots">
-              {TIKTOK_VIDEO_IDS.map((_, i) => (
-                <button
-                  key={i}
-                  type="button"
-                  className={`events-dot ${i === carouselIndex ? 'active' : ''}`}
-                  aria-label={`Go to slide ${i + 1}`}
-                  onClick={() => setCarouselIndex(i)}
-                />
               ))}
             </div>
+            <p className="events-grid-credit">
+              Videos from <a href="https://www.tiktok.com/@the_western.vintage" target="_blank" rel="noopener noreferrer">@the_western.vintage</a> on TikTok
+            </p>
           </div>
         </section>
       </main>
